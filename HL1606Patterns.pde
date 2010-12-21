@@ -1,6 +1,14 @@
 #include <HL1606.h>
 
 #define LEDCount 118    //Set how many LEDs we'll be driving.
+// Ideas
+// Roulette
+// 1d platformer, other games
+// Cellular automata
+// Random with backwards dot
+// 1d with collisions
+// Variable-speed blue, speed up on corners
+
 
 HL1606 strip(2, 3, 4, 5, LEDCount);  
 const int buttonPin1 = 8;    
@@ -11,6 +19,8 @@ void setup()
   strip.setAll(Command);
   pinMode(buttonPin1, INPUT);       
   pinMode(buttonPin2, INPUT);       
+  randomSeed(analogRead(0));
+
 }
 
 unsigned int auxPresses = 0;
@@ -62,10 +72,11 @@ boolean keepGoing() {
 // TODO: clock
 // 
 
-int mode = 0;
+int mode = 5;
 void loop()
 {
-  switch(mode % 4) {
+
+  switch(mode % 6) {
   case 0: 
     runRandFill(100);
     break;    
@@ -77,6 +88,12 @@ void loop()
     break;    
   case 3:
     runFadingDots(5000, 5, 1);
+    break;    
+  case 4:
+    runOneBackwards(1000, 5);
+    break;    
+  case 5:
+    runUniformPhysics(1000, 20);
     break;    
   }
   mode++; 
