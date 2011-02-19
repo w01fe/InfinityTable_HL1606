@@ -8,6 +8,10 @@
 // Random with backwards dot
 // 1d with collisions
 // Variable-speed blue, speed up on corners
+// Tic toc pendulum
+// Clock
+// LHC
+// http://visionlab.harvard.edu/silencing/
 
 
 HL1606 strip(2, 3, 4, 5, LEDCount);  
