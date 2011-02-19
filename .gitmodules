@@ -1,0 +1,3 @@
+[submodule "lib/HL1606"]
+	path = lib/HL1606
+	url = git@github.com:w01fe/HL1606.git
