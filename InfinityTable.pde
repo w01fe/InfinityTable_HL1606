@@ -2,17 +2,6 @@
 #include <Time.h>
 
 #define LEDCount 118    //Set how many LEDs we'll be driving.
-// Ideas
-// Roulette
-// 1d platformer, other games
-// Cellular automata
-// Random with backwards dot
-// 1d with collisions
-// Variable-speed blue, speed up on corners
-// Tic toc pendulum
-// Clock
-// LHC
-// http://visionlab.harvard.edu/silencing/
 
 HL1606 strip(2, 3, 4, 5, LEDCount);  
 const int buttonPin1 = 8;    
@@ -81,8 +70,8 @@ void loop() {
       runStretchToTriRainbow(20, 5000);
       break;
     case 2:
-      runClock(1000, 20);
-      break;
+//      runClock(1000, 20);
+//      break;
     case 3:
       runFadingDots(5000, 5, 1);
       break;
