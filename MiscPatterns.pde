@@ -35,21 +35,35 @@ void runBars() {
   } 
 }
 
+void delayLongMicroseconds(long x) {
+  while(x > 1000) {
+    delayMicroseconds(1000);
+    x -= 1000;
+  }
+  delayMicroseconds(x); 
+}
+
 void runSlowWhite() {
-//  strip.setAll(Command | RedOn | BlueOn | GreenOn);
-//  strip.latch();
-//  delay(1000);
   long int ind = 0;
   float d = 0.8;
-  while(keepGoing() && d < 1000) {
-    strip.sendByte(primaryCommands[ind % 3]);
-//    strip.sendByte(rainbowCommands[ind % 6]);
-    strip.latch();
-    delay((int) d);
-    ind++;    
-    d = d * pow(1.5, d / 1000.0);
-  } 
-  delay(1000);
+  float base = 1.5;
+  for(int i = 0; i < 5; i++) {
+    while(keepGoing() && d < 1000.0 && d > 0.79) {
+      strip.sendByte(primaryCommands[ind % 3]);
+      strip.latch();
+      delayLongMicroseconds((long)(d * 1000));
+      ind++;    
+      d = d * pow(base, d / 1000.0);
+    } 
+    if (d >= 1000) {
+      base = 1.0 - 0.12 * (i + 3); 
+      d = 999;      
+      delay(500);          
+    } else if (d <= 0.79) {
+      base = 1 + 0.5 * (i+1);
+      d = 0.8;
+    }
+  }
 }
 
 void runFadingDots(int cycles, int nFades, int ms) {

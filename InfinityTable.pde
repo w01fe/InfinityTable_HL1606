@@ -64,9 +64,9 @@ boolean keepGoing() {
 * when previous mode times out.
 ******************************************/
 
-int mode = 13;
+int mode = 0;
 void loop() {  
-  switch(mode % 14) {
+  switch(mode % 15) {
     case 0:
       runSlowWhite();
       break;
@@ -108,6 +108,9 @@ void loop() {
       break;
     case 13:
       runTrinaryCA(2040,2000,20);
+      break;
+    case 14:
+      runStandingWaves(100,10);
       break;
   }
   mode++;

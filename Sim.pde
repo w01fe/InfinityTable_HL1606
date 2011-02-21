@@ -210,3 +210,52 @@ void runTrinaryCA(int rule, int steps, int stepMs) {
     steps--;
   }  
 }
+
+
+// TODO: too slow to do what we really want to?
+void runStandingWaves(int steps, int stepMs) {
+//  unsigned int periods[8] = {3,4,;
+  unsigned int period = 24;
+  float timeStep = 0.5;
+  unsigned char command = Commandx2 | RedUp | BlueDown;
+  strip.setAll(Command);
+  
+  for(int i = 0; i < LEDCount; i++) {
+    strip.sendByte((i % period == 0) ? command : Noop);
+  }
+  
+  unsigned char nFades[period];
+
+  while(keepGoing() && steps > 0) {
+    int maxFades = 0;
+    float t = -timeStep * steps;
+    for(int i= 0; i < period; i++) {
+      float x = i * 2 * 3.1415926 / period;
+      float v = sin(x) + cos(x+t);
+      nFades[i] = (int)((v + 2) * 32);
+      if (nFades[i] > maxFades) maxFades = nFades[i];
+    }
+    
+    while(maxFades >= 0) {
+      strip.fades(1,250);
+
+//      boolean found = false;
+//      for(unsigned int i=0; i < period; i++) {
+//        if (nFades[i] == maxFades) found = true;
+//      }
+//      
+      if(true) {
+        for(unsigned int i=0; i < period; i++) {
+          strip.sendByte((i % period == 0) ? command : Noop);        
+          if (nFades[i] == maxFades) strip.latch();
+        }
+      }
+      maxFades--;
+    }      
+    
+//    strip.setFadedRing(commands, nFades, 0, period);    
+//    strip.setAll(Command | RedOn);
+//    delay(stepMs);
+    steps--;
+  }  
+}
