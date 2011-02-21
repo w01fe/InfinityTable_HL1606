@@ -16,6 +16,7 @@ void setup() {
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
   randomSeed(analogRead(0));
+  Serial.begin(9600);
 }
 
 /*****************************************
@@ -63,9 +64,9 @@ boolean keepGoing() {
 * when previous mode times out.
 ******************************************/
 
-int mode = 7;
+int mode = 13;
 void loop() {  
-  switch(mode % 8) {
+  switch(mode % 14) {
     case 0:
       runSlowWhite();
       break;
@@ -89,6 +90,24 @@ void loop() {
       break;
     case 7:
       runVariablePhysics(1000,2);
+      break;
+    case 8:
+      runBinaryCA(90,200,100);
+      break;
+    case 9:
+      runBinaryCA(102,200,100);
+      break;
+    case 10:
+      runBinaryCA(30,200,100);
+      break;
+    case 11:
+      runTrinaryCA(177,100,200);
+      break;
+    case 12:
+      runTrinaryCA(912,600,50);
+      break;
+    case 13:
+      runTrinaryCA(2040,2000,20);
       break;
   }
   mode++;

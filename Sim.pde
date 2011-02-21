@@ -77,7 +77,7 @@ int cl(float f) {
   return (int) (f-0.9999); 
 }
 
-// TODO: billiard balls.
+// Billiard ball physics
 void runVariablePhysics(int steps, int stepMs) {
   float cr = 1.0;  // Coefficient of restitution
 
@@ -124,6 +124,88 @@ void runVariablePhysics(int steps, int stepMs) {
       } 
     }
     strip.setRing(positions, 0, LEDCount);
+    delay(stepMs);
+    steps--;
+  }  
+}
+
+
+// http://mathworld.wolfram.com/ElementaryCellularAutomaton.html
+void runBinaryCA(int rule, int steps, int stepMs) {
+  boolean cell[LEDCount];
+  boolean cell2[LEDCount];
+  if (steps % 2 == 1) steps++;
+
+  for(int ind = 0; ind < LEDCount; ind++) cell[ind] = false;
+  cell[87] = true;  
+ 
+  while(keepGoing() && steps > 0) {
+    boolean *ccs, *ncs;
+    if (steps % 2 == 0) {
+        ccs = cell;
+        ncs = cell2; 
+    } else {
+        ccs = cell2;
+        ncs = cell;       
+    }
+    
+    for(int i= 0; i < LEDCount; i++) {
+      strip.sendByte(ccs[i] ? Command | RedOn | GreenOn | BlueOn : Command);        
+      int pi = (i + LEDCount - 1) % LEDCount;
+      int ni = (i + 1) % LEDCount;
+      
+      int oc = (ccs[pi] ? 4 : 0) + 
+               (ccs[i]  ? 2 : 0) + 
+               (ccs[ni] ? 1 : 0);
+      ncs[i] = (rule & (1 << oc)) > 0; 
+    }
+    strip.latch();
+
+    
+    delay(stepMs);
+    steps--;
+  }  
+}
+
+
+// http://mathworld.wolfram.com/TotalisticCellularAutomaton.html
+void runTrinaryCA(int rule, int steps, int stepMs) {
+  unsigned char codes[8];
+  for(int ind = 0; ind < 8; ind++) {
+    codes[ind] = rule % 3;
+    rule /= 3;  
+  }
+  
+  unsigned char cell[LEDCount];
+  unsigned char cell2[LEDCount];
+  if (steps % 2 == 1) steps++;
+
+  for(int ind = 0; ind < LEDCount; ind++) cell[ind] = 0;
+  cell[87] = 2;  
+ 
+  while(keepGoing() && steps > 0) {
+    unsigned char *ccs, *ncs;
+    if (steps % 2 == 0) {
+        ccs = cell;
+        ncs = cell2; 
+    } else {
+        ccs = cell2;
+        ncs = cell;       
+    }
+    
+    for(int i= 0; i < LEDCount; i++) {
+      if (ccs[i] == 0) strip.sendByte(Command);
+      if (ccs[i] == 1) strip.sendByte(Command | BlueOn);
+      if (ccs[i] == 2) strip.sendByte(Command | RedOn);
+      int pi = (i + LEDCount - 1) % LEDCount;
+      int ni = (i + 1) % LEDCount;
+      
+      int oc = ccs[pi] + ccs[i] + ccs[ni];
+      ncs[i] = codes[oc]; 
+    }
+    strip.latch();
+
+    
     delay(stepMs);
     steps--;
   }  
