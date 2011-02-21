@@ -69,3 +69,62 @@ void runUniformPhysics(int steps, int stepMs) {
     steps--;
   }  
 }
+
+// Here we have inelastic collisions and variable speeds.
+
+int cl(float f) {
+  if (f > 0) return (int) (f+0.9999); 
+  return (int) (f-0.9999); 
+}
+
+// TODO: billiard balls.
+void runVariablePhysics(int steps, int stepMs) {
+  float cr = 1.0;  // Coefficient of restitution
+
+  unsigned char positions[LEDCount];
+  char velocities[LEDCount];
+  int ind;
+  for(ind = 0; ind < LEDCount; ind++) {
+    positions[ind] = Command;
+    velocities[ind] = 0;
+    if (random(2) == 0) {
+      positions[ind] = randPrimaryCommand();
+      velocities[ind] = random(11) - 5;
+    }
+  }
+  while(keepGoing() && steps > 0) {
+    int dir = (steps % 2 == 0) ? -1 : 1;
+    boolean firstMoved = false;
+    for(int i= 0; i < LEDCount; i++) {
+      if (i == LEDCount - 1 && firstMoved) continue;
+      int ind = (dir == -1) ? i : LEDCount - i - 1;
+      int v = velocities[ind];
+      int s = v * dir;
+      if (s > 0 && (((steps / 2) % s) == 0) ) {
+        if (i == 0) firstMoved = true;
+         int c = positions[ind];
+         int ni = (ind + dir + LEDCount) % LEDCount;
+         if (c == positions[ni]) {
+           positions[ind] = positions[ni] = Command;
+           velocities[ind] = velocities[ni] = 0; 
+         } else if (positions[ni] != Command) {
+           float ov1 = v == 0 ? 0 : 1.0 / v;
+           float ov2 = velocities[ni] == 0 ? 0 : 1.0 / velocities[ni];
+           float nv1 = (cr * (ov2 - ov1) + ov1 + ov2) / 2;
+           float nv2 = (cr * (ov1 - ov2) + ov1 + ov2) / 2;
+           velocities[ind] = cl(nv1 == 0.0 ? 0 : 1/nv1);
+           velocities[ni] =  cl(nv2 == 0.0 ? 0 : 1/nv2);
+         } else {
+           positions[ni] = c;
+           positions[ind] = Command;
+           velocities[ni] = v;
+           velocities[ind] = 0;
+         }
+         
+      } 
+    }
+    strip.setRing(positions, 0, LEDCount);
+    delay(stepMs);
+    steps--;
+  }  
+}

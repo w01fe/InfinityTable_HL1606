@@ -63,9 +63,9 @@ boolean keepGoing() {
 * when previous mode times out.
 ******************************************/
 
-int mode = 6;
+int mode = 7;
 void loop() {  
-  switch(mode % 7) {
+  switch(mode % 8) {
     case 0:
       runSlowWhite();
       break;
@@ -87,9 +87,18 @@ void loop() {
     case 6:
       runRandFill(100);
       break;
+    case 7:
+      runVariablePhysics(1000,2);
+      break;
   }
   mode++;
 }
+
+
+
+/*****************************************
+* Misc. utilities, useful for other files.
+******************************************/
 
 unsigned char primaryCommands[3] = {
 Command | RedOn ,
