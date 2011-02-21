@@ -1,7 +1,11 @@
 #include <HL1606.h>
 #include <Time.h>
 
-#define LEDCount 118    //Set how many LEDs we'll be driving.
+/*****************************************
+* Set up the LED strip and 2 push-buttons
+******************************************/
+
+#define LEDCount 120    //Set how many LEDs we'll be driving.
 
 HL1606 strip(2, 3, 4, 5, LEDCount);  
 const int buttonPin1 = 8;    
@@ -14,32 +18,26 @@ void setup() {
   randomSeed(analogRead(0));
 }
 
+/*****************************************
+* Global vars and fns 
+******************************************/
+
+// Global vars for aux button state
+
 unsigned int auxPresses = 0;
 boolean auxPressed = false;
 long whenAuxPressed = 0;
 unsigned int auxTimer = 1000;
 
-void processAuxButton() {
-  int buttonState = digitalRead(buttonPin2);
-  if (buttonState == HIGH) {
-    long ct = millis();
-    if (!auxPressed) {
-      auxPressed = true;
-      whenAuxPressed = ct - (auxTimer - 100);
-    } else if (ct > whenAuxPressed + auxTimer) {
-      auxPresses++;
-      whenAuxPressed = ct;
-    }
-  } else {
-    auxPressed = false;
-  }
-}
-
+// Global vars for primary button state
+// These are reserved for main mode
 unsigned int modePressCount = 0;
 boolean modePressed = false;
 long whenModePressed = 0;
 
-// Return true if should keep going
+// Should call this in your inner loop to break out
+// with mode switches, and process aux button presses. 
+// If it returns false, your function should terminate.
 boolean keepGoing() {
   processAuxButton();
   int buttonState = digitalRead(buttonPin1);
@@ -59,9 +57,14 @@ boolean keepGoing() {
   return true;
 }
 
+/*****************************************
+* Main loop -- loops through patterns,
+* switching with primary button presses or 
+* when previous mode times out.
+******************************************/
+
 int mode = 6;
 void loop() {  
-
   switch(mode % 7) {
     case 0:
       runSlowWhite();
@@ -70,8 +73,8 @@ void loop() {
       runStretchToTriRainbow(20, 5000);
       break;
     case 2:
-//      runClock(1000, 20);
-//      break;
+      runClock(1000, 20);
+      break;
     case 3:
       runFadingDots(5000, 5, 1);
       break;
@@ -86,7 +89,6 @@ void loop() {
       break;
   }
   mode++;
-  
 }
 
 unsigned char primaryCommands[3] = {
