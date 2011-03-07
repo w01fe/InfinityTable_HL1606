@@ -16,7 +16,7 @@ void setup() {
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
   randomSeed(analogRead(0));
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 /*****************************************
@@ -64,9 +64,9 @@ boolean keepGoing() {
 * when previous mode times out.
 ******************************************/
 
-int mode = 0;
+int mode = 15;
 void loop() {  
-  switch(mode % 15) {
+  switch(mode % 16) {
     case 0:
       runSlowWhite();
       break;
@@ -112,6 +112,11 @@ void loop() {
     case 14:
       runStandingWaves(100,10);
       break;
+    case 15:
+      runStandingRainbow(100,10);
+      break;
+    case 16:
+      runTableServer();
   }
   mode++;
 }

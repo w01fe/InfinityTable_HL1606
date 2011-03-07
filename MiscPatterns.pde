@@ -35,12 +35,13 @@ void runBars() {
   } 
 }
 
-void delayLongMicroseconds(long x) {
+void delayLongMicroseconds(unsigned long x) {
   while(x > 1000) {
-    delayMicroseconds(1000);
+ //   delayMicroseconds(1000);
+    delay(1);
     x -= 1000;
   }
-  delayMicroseconds(x); 
+//  delayMicroseconds(x); 
 }
 
 void runSlowWhite() {
