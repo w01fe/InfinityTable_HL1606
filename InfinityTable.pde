@@ -64,9 +64,9 @@ boolean keepGoing() {
 * when previous mode times out.
 ******************************************/
 
-int mode = 15;
+int mode = 14;
 void loop() {  
-  switch(mode % 16) {
+  switch(mode % 15) {
     case 0:
       runSlowWhite();
       break;
