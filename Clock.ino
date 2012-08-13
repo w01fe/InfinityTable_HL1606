@@ -1,5 +1,5 @@
 void runClock(int steps, int stepMs) {
-  setTime(3,23,15,1,1,2011); // hr, min, sec, day, month, year
+//  setTime(3,23,15,1,1,2011); // hr, min, sec, day, month, year
   
   unsigned int i;
   
