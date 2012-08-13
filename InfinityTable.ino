@@ -74,7 +74,7 @@ void loop() {
       runStretchToTriRainbow(20, 5000);
       break;
     case 2:
-      runClock(1000, 20);
+//      runClock(1000, 20);
       break;
     case 3:
       runFadingDots(5000, 5, 1);
@@ -115,8 +115,8 @@ void loop() {
     case 15:
       runStandingRainbow(100,10);
       break;
-    case 16:
-      runTableServer();
+//    case 16:
+//      runTableServer();
   }
   mode++;
 }
